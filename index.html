@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regex Matcher</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            width: 70%; 
+            height: 70%; 
+            padding: 30px 20px; 
+            background-color: #000000;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd;
+            box-sizing: border-box; 
+            overflow: auto; 
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2487df;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: left;
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #38aceb;
+        }
+        input[type="text"] {
+            width: 100%; 
+            padding: 20px;
+            margin-bottom: 40px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        #regexPattern {
+            width: 100%; 
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            width: 100px; 
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        #matches {
+            margin-top: 35px;
+            border-top: 1px solid #ccc;
+            padding-top: 20px;
+        }
+        .match {
+            background-color: #f9f9f9;
+            padding: 10px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            color: #333;
+        }
+        .match i {
+            color: #4CAF50;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Regex Matcher</h1>
+        <form id="regexForm">
+            <label for="testString">Test String:</label>
+            <input type="text" id="testString" name="testString" required>
+            <label for="regexPattern">Regex Pattern:</label>
+            <input type="text" id="regexPattern" name="regexPattern" required>
+            <input type="submit" value="Match">
+        </form>
+        <div id="matches"></div>
+    </div>
+
+    <script>
+        document.getElementById('regexForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const testString = document.getElementById('testString').value;
+            const regexPattern = document.getElementById('regexPattern').value;
+            fetch('/match', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ test_string: testString, regex_pattern: regexPattern })
+            })
+            .then(response => response.text())
+            .then(matches => {
+                const matchesDiv = document.getElementById('matches');
+                matchesDiv.innerHTML = '';
+                JSON.parse(matches).forEach(match => {
+                    const matchElement = document.createElement('div');
+                    matchElement.classList.add('match');
+                    matchElement.innerHTML = `<i class="fas fa-check-circle"></i>${match}`;
+                    matchesDiv.appendChild(matchElement);
+                });
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
